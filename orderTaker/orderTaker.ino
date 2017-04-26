@@ -104,7 +104,42 @@ void instructions() {
 }
 
 void displayMenu() {
-  
+  for(int i = 0; i< 10; i += 2) {
+  key = NO_KEY;
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print(menu[i]);
+  lcd.setCursor(0,1);
+  lcd.print(menu[i+1]);
+  delay(100);
+  while(key == NO_KEY)
+    returnKey();
+    
+  if(key == '6') {
+    if(i == 8 )
+      i = -2;
+    continue;
+  }
+
+  else if(key == '4') { 
+    if(i == 0 || i == 8) {
+       i = -2;
+       continue;
+    }
+    else  {
+      i -= 4;
+      continue;
+    }
+  }
+
+  else {
+    errDisplay2();
+    i -= 2;
+    continue;
+  }
+  lcd.clear();
+  delay(10);
+  }
 }
 
 void errDisplay() {
@@ -113,6 +148,22 @@ void errDisplay() {
   lcd.print("Oops! Begin Your");
   lcd.setCursor(0,1);
   lcd.print("  Order First!  ");
+  delay(3000);
+  lcd.clear();
+  delay(10);
+}
+
+void errDisplay2() {
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Oops!");
+  lcd.setCursor(0,1);
+  lcd.print("Bad Choice!");
+  delay(3000);
+  lcd.setCursor(0,0);
+  lcd.print("   Try Again!   ");
+  lcd.setCursor(0,1);
+  lcd.print("****************");
   delay(3000);
   lcd.clear();
   delay(10);
@@ -153,46 +204,44 @@ void loop() {
    else {
     switch(key) {
       case '1':
+        key = NO_KEY;
         instructions();
         break;
       
       case '*':
+        key = NO_KEY;
+        order += "*";
+        displayMenu();
         break;
 
       case '#':
+        key = NO_KEY;
         errDisplay();
-       break;
+        break;
 
       case '4':
+        key = NO_KEY;
         errDisplay();
         break;
 
       case '6':
+        key = NO_KEY;
         errDisplay();
         break;
 
       case '5':
+        key = NO_KEY;
         errDisplay();
         break;
 
       case '0':
+        key = NO_KEY;
         errDisplay();
         break;
        
       default:
-        lcd.clear();
-        lcd.setCursor(0,0);
-        lcd.print("Oops!");
-        lcd.setCursor(0,1);
-        lcd.print("Bad Choice!");
-        delay(3000);
-        lcd.setCursor(0,0);
-        lcd.print("   Try Again!   ");
-        lcd.setCursor(0,1);
-        lcd.print("****************");
-        delay(3000);
-        lcd.clear();
-        delay(10);
+        key = NO_KEY;
+        errDisplay2();
     }//End of switch construct
     
    }//End of else condition
