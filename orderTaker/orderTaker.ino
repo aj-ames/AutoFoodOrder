@@ -14,6 +14,10 @@ char keys[ROWS][COLS] = {
 };
 
 char key;
+String order = "";
+
+boolean flag = false;
+int counter = 0;
 
 // Connect keypad ROW0, ROW1, ROW2 and ROW3 to these Arduino pins.
 byte rowPins[ROWS] = { 2,3,4,5 };
@@ -26,6 +30,8 @@ Keypad kpd = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
 
 void intro() {
+  lcd.clear();
+  
   lcd.setCursor(0,0);
   lcd.print("Auto Order Taker");
   lcd.setCursor(0,1);
@@ -44,6 +50,8 @@ void intro() {
 }
 
 void instructions() {
+  lcd.clear();
+  
   lcd.setCursor(0,0);
   lcd.print("To start order:");
   lcd.setCursor(0,1);
@@ -93,6 +101,21 @@ void instructions() {
   delay(10);
 }
 
+void displayMenu() {
+  
+}
+
+void errDisplay() {
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Oops! Begin Your");
+  lcd.setCursor(0,1);
+  lcd.print("  Order First!  ");
+  delay(3000);
+  lcd.clear();
+  delay(10);
+}
+
 void setup() {
   //Serial for Serial Monitor
   Serial.begin(9600);
@@ -107,17 +130,71 @@ void setup() {
   pinMode(36,OUTPUT);
   pinMode(37,OUTPUT);
   pinMode(52,OUTPUT);
+  
   digitalWrite(52,HIGH);
 
   //Initializing the 16x2 LCD screen
   lcd.begin(16,2);
 
   intro();
-  
 }
 
 void loop() {
-  instructions();
+  returnKey();
+  if(key == NO_KEY) {
+    //lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Instructions:");
+    lcd.setCursor(0,1);
+    lcd.print("    Press 1    ");
+  }
+   else {
+    switch(key) {
+      case '1':
+        instructions();
+        break;
+      
+      case '*':
+        break;
+
+      case '#':
+        errDisplay();
+       break;
+
+      case '4':
+        errDisplay();
+        break;
+
+      case '6':
+        errDisplay();
+        break;
+
+      case '5':
+        errDisplay();
+        break;
+
+      case '0':
+        errDisplay();
+        break;
+       
+      default:
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("Oops!");
+        lcd.setCursor(0,1);
+        lcd.print("Bad Choice!");
+        delay(3000);
+        lcd.setCursor(0,0);
+        lcd.print("   Try Again!   ");
+        lcd.setCursor(0,1);
+        lcd.print("****************");
+        delay(3000);
+        lcd.clear();
+        delay(10);
+    }//End of switch construct
+    
+   }//End of else condition
+   
 }
 
 char returnKey() {
