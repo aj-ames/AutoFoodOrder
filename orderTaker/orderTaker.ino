@@ -1,5 +1,6 @@
 #include <LiquidCrystal.h>
-LiquidCrystal lcd(12, 11, 10, 9, 8, 7); //RS, E, DB4, DB5, DB6, DB7
+#include <Keypad.h>
+LiquidCrystal lcd(32, 33, 34, 35, 36, 37); //RS, E, DB4, DB5, DB6, DB7
 
 const byte ROWS = 4; // Four rows
 const byte COLS = 3; // Three columns
@@ -28,21 +29,39 @@ void setup() {
   Serial1.begin(9600);
 
   //Pins of LCD Screen
-  pinMode(12,OUTPUT);
-  pinMode(11,OUTPUT);
-  pinMode(10,OUTPUT);
-  pinMode(9,OUTPUT);
-  pinMode(8,OUTPUT);
-  pinMode(7,OUTPUT);
+  pinMode(32,OUTPUT);
+  pinMode(33,OUTPUT);
+  pinMode(34,OUTPUT);
+  pinMode(35,OUTPUT);
+  pinMode(36,OUTPUT);
+  pinMode(37,OUTPUT);
+  pinMode(52,OUTPUT);
+  digitalWrite(52,HIGH);
 
   //Initializing the 16x2 LCD screen
   lcd.begin(16,2);
+
+  lcd.setCursor(0,0);
+  lcd.print("Auto Order Taker");
+  lcd.setCursor(0,1);
+  lcd.print("will take order!");
+  delay(3000);
+  lcd.clear();
+  delay(10);
+  lcd.setCursor(0,0);
+  lcd.print(" Choose wisely!");
+  lcd.setCursor(0,1);
+  lcd.print(" Don't be shy!");
+  delay(3000);
+  lcd.clear();
+  delay(10);
 }
 
 void loop() {
   char key=kpd.getKey(); //storing pressed value in key variable
   if(key != NO_KEY) {
     Serial.println(key);
+    Serial.flush();
   }
 }
 
