@@ -14,6 +14,8 @@ char keys[ROWS][COLS] = {
 };
 
 char key;
+
+String menu[10] = { "1. Tea", "2. Coffee", "3. Masala Dosa", "4. French Fries", "5. Veg. Burger", "6. Chicken Pizza", "7. Milk Shake", "8. Fruit Salad", "9. Diet Coke", "10. Fruit Juice" };
 String order = "";
 
 boolean flag = false;
