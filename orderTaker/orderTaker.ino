@@ -13,6 +13,8 @@ char keys[ROWS][COLS] = {
   {'*','0','#'}
 };
 
+char key;
+
 // Connect keypad ROW0, ROW1, ROW2 and ROW3 to these Arduino pins.
 byte rowPins[ROWS] = { 2,3,4,5 };
 
@@ -21,6 +23,75 @@ byte colPins[COLS] = { 6,7,8 };
 
 //  Create the Keypad
 Keypad kpd = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+
+
+void intro() {
+  lcd.setCursor(0,0);
+  lcd.print("Auto Order Taker");
+  lcd.setCursor(0,1);
+  lcd.print("will take order!");
+  delay(3000);
+  lcd.clear();
+  delay(10);
+  
+  lcd.setCursor(0,0);
+  lcd.print(" Choose wisely!");
+  lcd.setCursor(0,1);
+  lcd.print(" Don't be shy!");
+  delay(3000);
+  lcd.clear();
+  delay(10);
+}
+
+void instructions() {
+  lcd.setCursor(0,0);
+  lcd.print("To start order:");
+  lcd.setCursor(0,1);
+  lcd.print("    Press *    ");
+  delay(3000);
+  lcd.clear();
+  delay(10);
+  
+  lcd.setCursor(0,0);
+  lcd.print("To select item:");
+  lcd.setCursor(0,1);
+  lcd.print("    Press 5    ");
+  delay(3000);
+  lcd.clear();
+  delay(10);
+
+  lcd.setCursor(0,0);
+  lcd.print("To see next:");
+  lcd.setCursor(0,1);
+  lcd.print("    Press 6    ");
+  delay(3000);
+  lcd.clear();
+  delay(10);
+
+  lcd.setCursor(0,0);
+  lcd.print("To see previous:");
+  lcd.setCursor(0,1);
+  lcd.print("    Press 4    ");
+  delay(3000);
+  lcd.clear();
+  delay(10);
+
+  lcd.setCursor(0,0);
+  lcd.print("To confirm order:");
+  lcd.setCursor(0,1);
+  lcd.print("    Press #    ");
+  delay(3000);
+  lcd.clear();
+  delay(10);
+
+  lcd.setCursor(0,0);
+  lcd.print("To delete order:");
+  lcd.setCursor(0,1);
+  lcd.print("    Press 0    ");
+  delay(3000);
+  lcd.clear();
+  delay(10);
+}
 
 void setup() {
   //Serial for Serial Monitor
@@ -41,27 +112,16 @@ void setup() {
   //Initializing the 16x2 LCD screen
   lcd.begin(16,2);
 
-  lcd.setCursor(0,0);
-  lcd.print("Auto Order Taker");
-  lcd.setCursor(0,1);
-  lcd.print("will take order!");
-  delay(3000);
-  lcd.clear();
-  delay(10);
-  lcd.setCursor(0,0);
-  lcd.print(" Choose wisely!");
-  lcd.setCursor(0,1);
-  lcd.print(" Don't be shy!");
-  delay(3000);
-  lcd.clear();
-  delay(10);
+  intro();
+  
 }
 
 void loop() {
-  char key=kpd.getKey(); //storing pressed value in key variable
-  if(key != NO_KEY) {
-    Serial.println(key);
-    Serial.flush();
-  }
+  instructions();
 }
+
+char returnKey() {
+  key=kpd.getKey(); //storing pressed value in key variable
+  return key;
+  }
 
