@@ -15,7 +15,7 @@ char keys[ROWS][COLS] = {
 
 char key;
 
-String menu[10] = { "1. Tea", "2. Coffee", "3. Masala Dosa", "4. French Fries", "5. Veg. Burger", "6. Chicken Pizza", "7. Milk Shake", "8. Fruit Salad", "9. Diet Coke", "10. Fruit Juice" };
+String menu[11] = { "1. Tea", "2. Coffee", "3. Masala Dosa", "4. French Fries", "5. Veg. Burger", "6. Chicken Pizza", "7. Milk Shake", "8. Fruit Salad", "9. Diet Coke", "10. Fruit Juice", "Escape: 0" };
 String order = "";
 
 boolean flag = false;
@@ -104,34 +104,58 @@ void instructions() {
 }
 
 void displayMenu() {
-  for(int i = 0; i< 10; i += 2) {
+  for(int i = 0; i< 11; i++) {
   key = NO_KEY;
   lcd.clear();
   lcd.setCursor(0,0);
   lcd.print(menu[i]);
   lcd.setCursor(0,1);
-  lcd.print(menu[i+1]);
+  lcd.print("Next: 6|Prev: 4");
   delay(100);
   while(key == NO_KEY)
     returnKey();
     
   if(key == '6') {
-    if(i == 8 )
-      i = -2;
+    if(i == 10 )
+      i = -1;
     continue;
   }
 
   else if(key == '4') { 
-    if(i == 0 || i == 8) {
-       i = -2;
+    if(i == 0) {
+       i = -1;
        continue;
     }
     else  {
-      i -= 4;
+      i -= 2;
       continue;
     }
   }
 
+  else if(key == '5') {
+    int temp=i+1;
+    order += temp;
+    order += "*";
+    Serial.println(order);
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print(menu[i]);
+    lcd.setCursor(0,1);
+    lcd.print("Entered!");
+    delay(3000);
+    lcd.clear();
+    delay(10);
+    i -= 1;
+    continue;
+  }
+
+  else if(key == '#') {
+    
+  }
+
+  else if(key == '0') 
+    break;
+    
   else {
     errDisplay2();
     i -= 2;
