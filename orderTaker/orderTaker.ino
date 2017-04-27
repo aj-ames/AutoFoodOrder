@@ -14,12 +14,14 @@ char keys[ROWS][COLS] = {
 };
 
 char key;
+char ch = ' ';
+String sum = "";
 
-String menu[11] = { "1. Tea", "2. Coffee", "3. Masala Dosa", "4. French Fries", "5. Veg. Burger", "6. Chicken Pizza", "7. Milk Shake", "8. Fruit Salad", "9. Diet Coke", "10. Fruit Juice", "Escape: 0" };
-String order = "";
+String menu[11] = { "1.Tea  Rs. 10", "2.Coffee Rs. 25", "3.Dosa  Rs. 50", "4.Fries Rs. 100", "5.Burger  Rs. 125", "6.Pizza  Rs. 175", "7.Softie Rs. 75", "8.Salad  Rs. 35", "9.Coke  Rs. 30", "10.Juice  Rs. 20", "Escape: 0" };
+String order = "*";
 
 boolean flag = false;
-int counter = 0;
+//int counter = 0;
 
 // Connect keypad ROW0, ROW1, ROW2 and ROW3 to these Arduino pins.
 byte rowPins[ROWS] = { 2,3,4,5 };
@@ -97,7 +99,7 @@ void instructions() {
   lcd.setCursor(0,0);
   lcd.print("To delete order:");
   lcd.setCursor(0,1);
-  lcd.print("    Press 0    ");
+  lcd.print("    Press 8    ");
   delay(3000);
   lcd.clear();
   delay(10);
@@ -116,7 +118,7 @@ void displayMenu() {
     returnKey();
     
   if(key == '6') {
-    if(i == 10 )
+    if(i == 10 ) 
       i = -1;
     continue;
   }
@@ -134,7 +136,12 @@ void displayMenu() {
 
   else if(key == '5') {
     int temp=i+1;
-    order += temp;
+    if(temp<10) {
+      order += "0";
+      order += temp;
+    }
+    else
+      order += temp;
     order += "*";
     Serial.println(order);
     lcd.clear();
@@ -142,7 +149,7 @@ void displayMenu() {
     lcd.print(menu[i]);
     lcd.setCursor(0,1);
     lcd.print("Entered!");
-    delay(3000);
+    delay(1000);
     lcd.clear();
     delay(10);
     i -= 1;
@@ -150,15 +157,59 @@ void displayMenu() {
   }
 
   else if(key == '#') {
-    
+    order += "#";
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Order Accepted!");
+    lcd.setCursor(0,1);
+    lcd.print("****************");
+    delay(2000);
+    lcd.clear();
+    delay(10);
+    Serial1.println(order);
+    Serial.flush();
+    order = "*";
+    while(Serial1.available()) {
+      while(ch != '#') {
+        ch = Serial1.read();
+        sum += ch;
+      }
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("   Total Cost:   ");
+      lcd.setCursor(0,1);
+      lcd.print(sum);
+      delay(3000);
+      lcd.clear();
+      delay(10);
+      flag = true;
+    }
+    if(flag == true) {
+      flag = false;
+      break;
+    }
+    break;
   }
 
   else if(key == '0') 
     break;
+
+  else if(key == '8') {
+    order = "*";
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print(" Order Cleared! ");
+    lcd.setCursor(0,1);
+    lcd.print("****************");
+    delay(3000);
+    lcd.clear();
+    delay(10);
+    break;
+  }
     
   else {
     errDisplay2();
-    i -= 2;
+    i -= 1;
     continue;
   }
   lcd.clear();
@@ -206,24 +257,26 @@ void setup() {
   pinMode(35,OUTPUT);
   pinMode(36,OUTPUT);
   pinMode(37,OUTPUT);
-  pinMode(52,OUTPUT);
   
+  pinMode(52,OUTPUT);
   digitalWrite(52,HIGH);
+  pinMode(53,OUTPUT);
+  digitalWrite(53,HIGH);
 
   //Initializing the 16x2 LCD screen
   lcd.begin(16,2);
 
   intro();
-}
+}//End of setup()
 
 void loop() {
   returnKey();
   if(key == NO_KEY) {
     //lcd.clear();
     lcd.setCursor(0,0);
-    lcd.print("Instructions:");
+    lcd.print("Instructions: 1");
     lcd.setCursor(0,1);
-    lcd.print("    Press 1    ");
+    lcd.print(" Start Order: * ");
   }
    else {
     switch(key) {
@@ -234,7 +287,6 @@ void loop() {
       
       case '*':
         key = NO_KEY;
-        order += "*";
         displayMenu();
         break;
 
