@@ -15,9 +15,10 @@ char keys[ROWS][COLS] = {
 
 char key;
 char ch = ' ';
-String sum = "";
+int s = 0;
 
 String menu[11] = { "1.Tea  Rs. 10", "2.Coffee Rs. 25", "3.Dosa  Rs. 50", "4.Fries Rs. 100", "5.Burger  Rs. 125", "6.Pizza  Rs. 175", "7.Softie Rs. 75", "8.Salad  Rs. 35", "9.Coke  Rs. 30", "10.Juice  Rs. 20", "Escape: 0" };
+int price[10] = {10, 25, 50, 100, 125, 275, 75, 35, 30, 20};
 String order = "*";
 
 boolean flag = false;
@@ -143,6 +144,7 @@ void displayMenu() {
     else
       order += temp;
     order += "*";
+    s += price[i];
     Serial.println(order);
     lcd.clear();
     lcd.setCursor(0,0);
@@ -169,21 +171,16 @@ void displayMenu() {
     Serial1.println(order);
     Serial.flush();
     order = "*";
-    while(Serial1.available()) {
-      while(ch != '#') {
-        ch = Serial1.read();
-        sum += ch;
-      }
-      lcd.clear();
-      lcd.setCursor(0,0);
-      lcd.print("   Total Cost:   ");
-      lcd.setCursor(0,1);
-      lcd.print(sum);
-      delay(3000);
-      lcd.clear();
-      delay(10);
-      flag = true;
-    }
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("   Total Cost:   ");
+    lcd.setCursor(0,1);
+    lcd.print(s);
+    delay(3000);
+    lcd.clear();
+    delay(10);
+    flag = true;
+    
     if(flag == true) {
       flag = false;
       break;
